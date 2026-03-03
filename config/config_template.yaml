@@ -1,0 +1,40 @@
+# Obsidian语义搜索 - 配置模板
+# 复制此文件为 config.yaml 并修改相应配置
+
+# 模型配置
+model:
+  # BGE-M3 API配置
+  api:
+    base_url: "http://YOUR_LM_STUDIO_IP:1234"  # LM Studio服务地址
+    model_name: "text-embedding-bge-m3"        # BGE-M3模型名称
+    timeout: 30                                # API超时时间（秒）
+    max_retries: 3                             # 最大重试次数
+  batch_size: 10                               # 批量处理大小
+  use_concurrent: true                         # 使用并发处理
+
+# 文本处理配置
+text_processing:
+  chunk_size: 3000                             # 目标分块大小（字符）
+  chunk_overlap: 300                           # 分块重叠字符数
+  min_chunk_size: 2000                         # 最小分块大小
+  max_chunk_size: 4000                         # 最大分块大小
+  adaptive_chunking: true                      # 自适应分块
+
+# 文件处理配置
+file_processing:
+  supported_extensions: [".md", ".markdown", ".txt"]  # 支持的文件扩展名
+  ignore_patterns: ["*.git/*", "*.obsidian/*", "*.trash/*"]  # 忽略模式
+  encoding: "utf-8"                            # 文件编码
+
+# lanceDB配置
+lancedb:
+  table_name: "obsidian_embeddings_bge_m3"     # 向量表名称
+  vector_dimension: 1024                       # BGE-M3向量维度
+  metric_type: "cosine"                        # 相似度度量方式
+
+# 路径配置
+paths:
+  test_data: "/tmp/obsidian_test_data/"        # 测试数据路径
+  data_dir: "./data/"                          # 数据目录
+  embeddings_dir: "./data/embeddings/"         # 嵌入向量目录
+  index_dir: "./data/index/"                   # 索引目录

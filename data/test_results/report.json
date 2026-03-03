@@ -1,0 +1,82 @@
+{
+  "test_date": "2026-03-03T09:39:57.240199",
+  "test_data": {
+    "directory": "/tmp/obsidian_test_data/",
+    "file_count": 10,
+    "file_names": [
+      "快照.1.md",
+      "页面.md",
+      "telegram-command-authorization-fix.md",
+      "当前Openclaw 拥有的技能.md",
+      "测试文件.md",
+      "奉贤工商、办税、税务专员.md",
+      "Golang gin 后台服务器.md",
+      "Obsidian语义搜索增强方案.md",
+      "新闻搜索.md",
+      "OpenClaw深度使用体验分析.md"
+    ]
+  },
+  "processing_stats": {
+    "extraction_time_seconds": 0.02,
+    "chunking_time_seconds": 0.0,
+    "total_time_seconds": 0.02,
+    "total_chunks": 30,
+    "total_characters": 14775,
+    "average_chunk_size": 492.5,
+    "chunk_size_distribution": {
+      "0-100": 3,
+      "101-300": 5,
+      "301-500": 12,
+      "501-1000": 10,
+      "1000+": 0
+    }
+  },
+  "sample_chunks": [
+    {
+      "chunk_id": "快照.1.md_0",
+      "file_name": "快照.1.md",
+      "text_preview": "![[./_resources/快照.1.resources/IMG_20150123_061738.jpeg]]\n![[./_resources/快照.1.resources/图片.jpeg]]",
+      "text_length": 98,
+      "heading_context": []
+    },
+    {
+      "chunk_id": "页面.md_0",
+      "file_name": "页面.md",
+      "text_preview": "http://mall.yxt.com/onlinecourse/product/40db25f9-6c1f-4d28-8159-a02694d763ec\nhttp://mall.yxt.com/organization/orgcourse?orgId=3a78d24e-79e6-46f5-a0dc...",
+      "text_length": 265,
+      "heading_context": []
+    },
+    {
+      "chunk_id": "telegram-command-authorization-fix.md_0",
+      "file_name": "telegram-command-authorization-fix.md",
+      "text_preview": "Telegram群组命令授权问题解决总结 问题描述 时间: 2026年3月2日 现象: OpenClaw升级后，在Telegram群组中发送命令时出现错误： 影响: 群组成员无法使用/new、/help等命令 问题分析 1. 根本原因 OpenClaw升级后引入了更严格的权限控制机制，导致： - 群...",
+      "text_length": 377,
+      "heading_context": []
+    },
+    {
+      "chunk_id": "telegram-command-authorization-fix.md_1",
+      "file_name": "telegram-command-authorization-fix.md",
+      "text_preview": " Bot只能看到提及它的消息 命令无法被Bot看到: 当隐私模式启用时，Bot看不到非提及的命令消息 解决方案 第一步：OpenClaw配置修复 1. 检查当前配置 2. 更新全局配置 3. 更新群组特定配置 4. 重启Gateway 第二步：Telegram Bot设置修复 1. 禁用Bot隐私模...",
+      "text_length": 489,
+      "heading_context": []
+    },
+    {
+      "chunk_id": "telegram-command-authorization-fix.md_2",
+      "file_name": "telegram-command-authorization-fix.md",
+      "text_preview": "nClaw升级可能改变默认权限策略 需要检查并更新现有配置 建议在升级前备份配置文件 3. 调试步骤 检查OpenClaw配置：openclaw config get channels.telegram 查看日志：openclaw logs --follow 验证Gateway状态：openclaw...",
+      "text_length": 388,
+      "heading_context": []
+    }
+  ],
+  "output_files": {
+    "extracted_contents": "./data/test_results/extracted_contents.json",
+    "chunks": "./data/test_results/chunks.json",
+    "report": "./data/test_results/report.json"
+  },
+  "next_steps": [
+    "1. 向量嵌入生成（使用sentence-transformers模型）",
+    "2. lanceDB索引构建",
+    "3. 语义搜索接口实现",
+    "4. 性能优化和测试"
+  ]
+}

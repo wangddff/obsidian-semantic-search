@@ -1,0 +1,39 @@
+# 配置文件
+
+# 模型配置
+model:
+  # BGE-M3 API配置
+  api:
+    base_url: "http://192.168.1.4:1234"
+    model_name: "text-embedding-bge-m3"
+    timeout: 30
+    max_retries: 3
+  batch_size: 10
+  use_concurrent: true
+
+# 文本处理配置
+text_processing:
+  chunk_size: 3000  # 每个分块大约3000字符（基于8192 tokens上下文）
+  chunk_overlap: 300  # 分块重叠字符数
+  min_chunk_size: 2000  # 最小分块大小
+  max_chunk_size: 4000  # 最大分块大小
+  adaptive_chunking: true  # 自适应分块
+
+# 文件处理配置
+file_processing:
+  supported_extensions: [".md", ".markdown", ".txt"]
+  ignore_patterns: ["*.git/*", "*.obsidian/*", "*.trash/*"]
+  encoding: "utf-8"
+
+# lanceDB配置
+lancedb:
+  table_name: "obsidian_embeddings_bge_m3"  # 新表名，避免与旧数据冲突
+  vector_dimension: 1024  # BGE-M3的向量维度
+  metric_type: "cosine"  # 相似度度量方式
+
+# 路径配置
+paths:
+  test_data: "/tmp/obsidian_test_data/"
+  data_dir: "./data/"
+  embeddings_dir: "./data/embeddings/"
+  index_dir: "./data/index/"

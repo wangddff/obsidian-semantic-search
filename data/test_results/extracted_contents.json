@@ -1,0 +1,72 @@
+[
+  {
+    "file_name": "快照.1.md",
+    "file_path": "/tmp/obsidian_test_data/快照.1.md",
+    "content_preview": "![[./_resources/快照.1.resources/IMG_20150123_061738.jpeg]]\n![[./_resources/快照.1.resources/图片.jpeg]]",
+    "content_length": 98,
+    "metadata": {}
+  },
+  {
+    "file_name": "页面.md",
+    "file_path": "/tmp/obsidian_test_data/页面.md",
+    "content_preview": "http://mall.yxt.com/onlinecourse/product/40db25f9-6c1f-4d28-8159-a02694d763ec\nhttp://mall.yxt.com/organization/orgcourse?orgId=3a78d24e-79e6-46f5-a0dc-d12f9d751e31\n1.诊断平台首页图片替换\n\n后台展示考试结果 （公司,联系人，考试成绩）...",
+    "content_length": 265,
+    "metadata": {}
+  },
+  {
+    "file_name": "telegram-command-authorization-fix.md",
+    "file_path": "/tmp/obsidian_test_data/telegram-command-authorization-fix.md",
+    "content_preview": "Telegram群组命令授权问题解决总结\n问题描述\n时间: 2026年3月2日\n现象: OpenClaw升级后，在Telegram群组中发送命令时出现错误：\n影响: 群组成员无法使用/new、/help等命令\n问题分析\n1. 根本原因\nOpenClaw升级后引入了更严格的权限控制机制，导致：\n- 群组策略配置需要更明确的设置\n- 命令授权与消息授权分离\n- Telegram Bot隐私设置的影响\n...",
+    "content_length": 1407,
+    "metadata": {}
+  },
+  {
+    "file_name": "当前Openclaw 拥有的技能.md",
+    "file_path": "/tmp/obsidian_test_data/当前Openclaw 拥有的技能.md",
+    "content_preview": "根据系统提示，当前会话中可用的技能有：\n\nhealthcheck - 主机安全加固和风险评估配置\n\nskill-creator - 创建或更新AgentSkills\n\nvideo-frames - 使用ffmpeg从视频提取帧或短片\n\nweather - 获取当前天气和预报\n\n不过系统里实际安装的技能远不止这些！有50多个技能，包括：\n常用工具类：\n• obsidian - Obsidian笔记管...",
+    "content_length": 958,
+    "metadata": {}
+  },
+  {
+    "file_name": "测试文件.md",
+    "file_path": "/tmp/obsidian_test_data/测试文件.md",
+    "content_preview": "这是测试文件",
+    "content_length": 6,
+    "metadata": {}
+  },
+  {
+    "file_name": "奉贤工商、办税、税务专员.md",
+    "file_path": "/tmp/obsidian_test_data/奉贤工商、办税、税务专员.md",
+    "content_preview": "上海昱彤电气技术有限公司\n工商办理地址：奉贤区 望园南路1529弄A-2楼\n税务电话：12366\n完税\n电话列表：\nhttps://www.95ye.com/article/43547.html\n上海市奉贤区行政服务中心办事大厅\n地址：奉贤区南桥镇网园南路1529弄中企联合大厦1-3号楼\n电话：021-37123456\n办公时间：星期一至星期五（上海08:30-11:30；下午13:00-17:0...",
+    "content_length": 681,
+    "metadata": {}
+  },
+  {
+    "file_name": "Golang gin 后台服务器.md",
+    "file_path": "/tmp/obsidian_test_data/Golang gin 后台服务器.md",
+    "content_preview": "示例\nhttps://gin-gonic.com/zh-cn/docs/examples/",
+    "content_length": 45,
+    "metadata": {}
+  },
+  {
+    "file_name": "Obsidian语义搜索增强方案.md",
+    "file_path": "/tmp/obsidian_test_data/Obsidian语义搜索增强方案.md",
+    "content_preview": "Obsidian语义搜索增强方案：lanceDB集成\n📅 讨论时间\n\n日期：2026年3月2日\n时间：20:35-20:46 GMT+8\n参与方：wangddff & Cat (OpenClaw助手)\n\n🎯 问题背景\n用户拥有一个1.5GB的Obsidian笔记库，涵盖所有生活和工作记录。虽然已经掌握了基本的Obsidian搜索技能，但希望进一步提升知识检索能力。\n现有技能：\n\n基础搜索：（按文件...",
+    "content_length": 2003,
+    "metadata": {}
+  },
+  {
+    "file_name": "新闻搜索.md",
+    "file_path": "/tmp/obsidian_test_data/新闻搜索.md",
+    "content_preview": "🔍 科技新闻检索任务执行流程说明\n1. 任务理解与分析\n用户需求\n检索过去10天内最新的科技新闻，涵盖以下领域：\n- AI、人工智能、机器人、软件、芯片、云计算、存储、算力等\n具体要求\n\n关注国内外知名科技公司：\n国内：阿里、腾讯、百度、字节跳动、京东、美团、华为、小米等\n国外：苹果、谷歌、微软、亚马逊、Facebook、英伟达等\n收集10个最重要的新闻主题\n为每个主题提供简要概述\n标注新闻发生时...",
+    "content_length": 3992,
+    "metadata": {}
+  },
+  {
+    "file_name": "OpenClaw深度使用体验分析.md",
+    "file_path": "/tmp/obsidian_test_data/OpenClaw深度使用体验分析.md",
+    "content_preview": "深度用了几周 OpenClaw，我终于搞懂它和其他 AI 工具的本质区别\n作者: AI观测室\n发布日期: 2026年02月17日 16:01\n来源: 今日头条\n\n今天这篇，可能会稍微有点长。 但我保证，看完之后，你对 AI 助手的理解，会上一个新台阶。 上次分享完 OpenClaw 的初体验后，陆陆续续收到不少朋友的私信： \"它和 ChatGPT 有什么区别？\" \"为什么说它是自动化平台，不只是个...",
+    "content_length": 4788,
+    "metadata": {}
+  }
+]

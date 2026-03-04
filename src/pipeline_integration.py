@@ -218,38 +218,26 @@ class ObsidianSemanticSearchPipeline:
         pipeline_start_time = time.time()
         
         try:
-            # 1. 提取文件列表
-            logger.info("步骤1: 扫描文件...")
-            files = self.text_extractor.scan_directory(directory_path, recursive)
-            self.stats.total_files = len(files)
+            # 1. 提取文件列表和内容
+            logger.info("步骤1: 扫描文件并提取内容...")
+            extraction_start = time.time()
             
-            if not files:
+            # 使用extract_from_directory直接提取内容
+            all_documents = self.text_extractor.extract_from_directory(
+                directory_path, 
+                extensions=self.config['file_processing']['supported_extensions']
+            )
+            self.stats.total_files = len(all_documents)
+            
+            if not all_documents:
                 logger.warning("未找到可处理的文件")
                 return self.stats
             
-            logger.info(f"  找到 {len(files)} 个文件")
+            logger.info(f"  找到 {len(all_documents)} 个文件")
             
-            # 2. 提取文本内容
-            logger.info("步骤2: 提取文本内容...")
-            extraction_start = time.time()
-            
-            all_documents = []
-            for file_path in files:
-                try:
-                    document = self.text_extractor.extract_text(file_path)
-                    if document:
-                        all_documents.append(document)
-                        logger.debug(f"  提取成功: {os.path.basename(file_path)}")
-                    else:
-                        logger.warning(f"  提取失败: {os.path.basename(file_path)}")
-                except Exception as e:
-                    error_msg = f"提取文件失败 {file_path}: {e}"
-                    logger.error(error_msg)
-                    self.stats.errors.append(error_msg)
-            
-            extraction_time = time.time() - extraction_start
-            self.stats.extraction_time = extraction_time
-            logger.info(f"  提取完成: {len(all_documents)} 个文档，耗时 {extraction_time:.2f}秒")
+            # 2. 更新提取时间统计
+            self.stats.extraction_time = time.time() - extraction_start
+            logger.info(f"  提取完成: {len(all_documents)} 个文档，耗时 {self.stats.extraction_time:.2f}秒")
             
             if not all_documents:
                 logger.error("没有成功提取的文档")
@@ -259,16 +247,14 @@ class ObsidianSemanticSearchPipeline:
             logger.info("步骤3: 分块处理...")
             chunking_start = time.time()
             
-            all_chunks = []
-            for doc in all_documents:
-                try:
-                    chunks = self.chunk_processor.process_document(doc)
-                    all_chunks.extend(chunks)
-                    logger.debug(f"  分块完成: {doc.file_name} -> {len(chunks)} 个分块")
-                except Exception as e:
-                    error_msg = f"分块处理失败 {doc.file_name}: {e}"
-                    logger.error(error_msg)
-                    self.stats.errors.append(error_msg)
+            try:
+                all_chunks = self.chunk_processor.process_extracted_contents(all_documents)
+                logger.info(f"  分块完成: {len(all_chunks)} 个分块")
+            except Exception as e:
+                error_msg = f"分块处理失败: {e}"
+                logger.error(error_msg)
+                self.stats.errors.append(error_msg)
+                all_chunks = []
             
             chunking_time = time.time() - chunking_start
             self.stats.chunking_time = chunking_time

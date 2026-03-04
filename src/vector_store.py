@@ -403,6 +403,82 @@ class LanceDBVectorStore:
             logger.error(f"获取统计信息失败: {e}")
             return {'error': str(e)}
     
+    def delete_by_file_path(self, file_path: str) -> int:
+        """
+        按文件路径删除记录
+        
+        Args:
+            file_path: 文件路径
+            
+        Returns:
+            删除的记录数
+        """
+        try:
+            self._ensure_imports()
+            
+            if self.table is None:
+                logger.error("表不存在，无法删除记录")
+                return 0
+            
+            logger.info(f"删除文件路径的记录: {file_path}")
+            
+            # 构建删除条件
+            condition = f"file_path = '{file_path}'"
+            
+            # 先查询有多少条记录
+            before_count = self.table.count_rows()
+            
+            # 执行删除
+            self.table.delete(condition)
+            
+            # 查询删除后的记录数
+            after_count = self.table.count_rows()
+            
+            deleted_count = before_count - after_count
+            logger.info(f"删除完成: {deleted_count} 条记录")
+            
+            return deleted_count
+            
+        except Exception as e:
+            logger.error(f"按文件路径删除记录失败 {file_path}: {e}")
+            return 0
+    
+    def update_file_path(self, old_path: str, new_path: str) -> int:
+        """
+        更新文件路径
+        
+        Args:
+            old_path: 旧文件路径
+            new_path: 新文件路径
+            
+        Returns:
+            更新的记录数
+        """
+        try:
+            self._ensure_imports()
+            
+            if self.table is None:
+                logger.error("表不存在，无法更新记录")
+                return 0
+            
+            logger.info(f"更新文件路径: {old_path} → {new_path}")
+            
+            # 构建更新条件
+            condition = f"file_path = '{old_path}'"
+            
+            # 执行更新
+            updated = self.table.update(
+                where=condition,
+                values={"file_path": new_path}
+            )
+            
+            logger.info(f"更新完成: {updated.modified_count} 条记录")
+            return updated.modified_count
+            
+        except Exception as e:
+            logger.error(f"更新文件路径失败 {old_path} → {new_path}: {e}")
+            return 0
+    
     def delete_records(self, condition: str) -> int:
         """
         删除符合条件的记录
@@ -538,6 +614,17 @@ class LanceDBVectorStore:
             return json.loads(metadata_str)
         except:
             return {}
+    
+    def close(self):
+        """关闭数据库连接"""
+        try:
+            # lanceDB连接通常不需要显式关闭
+            # 但我们可以清理引用
+            self.db = None
+            self.table = None
+            logger.info(f"关闭lanceDB连接: {self.db_path}")
+        except Exception as e:
+            logger.warning(f"关闭连接时出错: {e}")
 
 
 class VectorStoreManager:

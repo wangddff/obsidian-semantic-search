@@ -240,11 +240,22 @@ class BGE_M3_Client:
         
         with ThreadPoolExecutor(max_workers=self.config.max_workers) as executor:
             future_to_text = {}
+            valid_texts = []
             
+            # 过滤空文本
             for batch_idx, batch in enumerate(batches):
                 for text in batch:
-                    future = executor.submit(self.get_embedding, text)
-                    future_to_text[future] = text
+                    if text and text.strip():  # 过滤空文本
+                        future = executor.submit(self.get_embedding, text)
+                        future_to_text[future] = text
+                        valid_texts.append(text)
+                    else:
+                        # 记录空文本但跳过处理
+                        logger.debug(f"跳过空文本: 索引 {len(valid_texts)}")
+                        failed_texts.append(text)
+            
+            valid_total = len(valid_texts)
+            logger.info(f"实际处理 {valid_total} 个有效文本 (过滤了 {total_texts - valid_total} 个空文本)")
             
             # 收集结果
             completed = 0
@@ -259,8 +270,8 @@ class BGE_M3_Client:
                     logger.error(f"处理文本失败: {text[:50]}... - {e}")
                     failed_texts.append(text)
                 
-                if completed % 10 == 0 or completed == total_texts:
-                    logger.info(f"并发处理进度: {completed}/{total_texts} ({completed/total_texts*100:.1f}%)")
+                if completed % 10 == 0 or completed == valid_total:
+                    logger.info(f"并发处理进度: {completed}/{valid_total} ({completed/valid_total*100:.1f}%)")
         
         if failed_texts:
             logger.warning(f"有 {len(failed_texts)} 个文本处理失败")

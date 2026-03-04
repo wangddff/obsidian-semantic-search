@@ -197,6 +197,55 @@ results = pipeline.search("meeting notes from last week about project X", limit=
 results = pipeline.search("connections between machine learning and neuroscience", limit=10)
 ```
 
+## 🖥️ Command Line Interface
+
+The project includes a CLI tool for easy interaction:
+
+### Basic Usage
+
+```bash
+# Test system connectivity
+python cli.py test
+
+# Process an Obsidian vault directory
+python cli.py process /path/to/your/obsidian/vault
+
+# Perform semantic search
+python cli.py search "machine learning techniques" --limit 5
+
+# Show database statistics
+python cli.py stats
+
+# Get help
+python cli.py --help
+```
+
+### Advanced Examples
+
+```bash
+# Process directory with custom config
+python cli.py --config ./config/custom.yaml process /path/to/vault
+
+# Search with verbose output
+python cli.py search "artificial intelligence" -l 10 -v
+
+# Test specific components
+python cli.py test
+```
+
+### Docker Usage
+
+```bash
+# Build the Docker image
+docker build -t obsidian-semantic-search .
+
+# Run with Docker Compose
+docker-compose up -d
+
+# Run CLI commands inside container
+docker run -v ./data:/app/data -v ./config:/app/config obsidian-semantic-search test
+```
+
 ## 🤝 Contributing
 
 1. Fork the repository

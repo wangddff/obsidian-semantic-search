@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  obsidian-semantic-search:
+    build: .
+    container_name: obsidian-semantic-search
+    restart: unless-stopped
+    ports:
+      - "8000:8000"  # 如果需要API服务可以启用
+    volumes:
+      - ./data:/app/data  # 持久化向量数据库
+      - ./logs:/app/logs  # 持久化日志
+      - ./config:/app/config  # 持久化配置
+      - /path/to/your/obsidian/vault:/data/obsidian:ro  # 挂载Obsidian笔记库（只读）
+    environment:
+      - LM_STUDIO_API_URL=http://host.docker.internal:1234  # LM Studio API地址
+      - OBSIDIAN_VAULT_PATH=/data/obsidian
+    networks:
+      - obsidian-network
+    command: >
+      sh -c "
+      echo '等待LM Studio API服务启动...' &&
+      sleep 10 &&
+      python cli.py test &&
+      echo '系统测试完成，准备就绪' &&
+      tail -f /dev/null
+      "
+
+  # 如果需要API服务，可以添加以下服务
+  # api-server:
+  #   build: .
+  #   container_name: obsidian-api-server
+  #   restart: unless-stopped
+  #   ports:
+  #     - "8000:8000"
+  #   volumes:
+  #     - ./data:/app/data
+  #     - ./config:/app/config
+  #   environment:
+  #     - LM_STUDIO_API_URL=http://host.docker.internal:1234
+  #   command: python api_server.py
+  #   depends_on:
+  #     - obsidian-semantic-search
+  #   networks:
+  #     - obsidian-network
+
+networks:
+  obsidian-network:
+    driver: bridge
+
+volumes:
+  obsidian-data:
+    driver: local

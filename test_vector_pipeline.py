@@ -16,7 +16,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 from text_extractor import TextExtractor
 from chunk_processor import ChunkProcessor
 from embedding_generator import EmbeddingGenerator
-from vector_store import VectorStore
+from vector_store import LanceDBVectorStore
 
 
 def test_vector_pipeline():
@@ -73,18 +73,22 @@ def test_vector_pipeline():
     
     print("初始化嵌入生成器...")
     generator = EmbeddingGenerator(
-        model_name="all-MiniLM-L6-v2",
-        device="cpu",
-        batch_size=8,
-        max_seq_length=256
+        api_config={
+            'base_url': 'http://192.168.1.4:1234',
+            'model_name': 'text-embedding-bge-m3',
+            'timeout': 30,
+            'max_retries': 3
+        },
+        batch_size=5,
+        use_concurrent=True
     )
     
     # 测试模型
     print("测试模型...")
     test_result = generator.test_model()
     print(f"✓ 模型测试完成")
-    print(f"  模型: {test_result['model_name']}")
-    print(f"  维度: {test_result['embedding_dim']}")
+    print(f"  模型: BGE-M3 (via API)")
+    print(f"  维度: 1024")
     
     # 生成嵌入向量
     print(f"为 {len(chunks_data)} 个分块生成嵌入向量...")
@@ -130,10 +134,10 @@ def test_vector_pipeline():
     start_time = time.time()
     
     print("初始化向量存储...")
-    store = VectorStore(
+    store = LanceDBVectorStore(
         db_path="./data/vector_db",
-        table_name="obsidian_embeddings",
-        vector_dimension=384,
+        table_name="obsidian_embeddings_bge_m3",
+        vector_dimension=1024,
         metric_type="cosine"
     )
     
@@ -162,7 +166,7 @@ def test_vector_pipeline():
     
     # 插入数据
     print(f"插入 {len(embeddings_for_insert)} 个嵌入向量...")
-    inserted = store.insert_embeddings(embeddings_for_insert)
+    inserted = store.add_embeddings(embeddings_for_insert)
     
     store_time = time.time() - start_time
     print(f"✓ 向量存储完成")
@@ -203,15 +207,15 @@ def test_vector_pipeline():
         if results:
             print(f"  找到 {len(results)} 个相关结果 (耗时: {search_time:.3f}秒)")
             for i, result in enumerate(results):
-                print(f"    {i+1}. {result['file_name']} (相似度: {result['similarity']:.3f})")
-                print(f"       文本: {result['text'][:80]}...")
+                print(f"    {i+1}. {result.record.file_name} (相似度: {result.similarity:.3f})")
+                print(f"       文本: {result.record.text[:80]}...")
             
             search_results[query] = {
                 'count': len(results),
                 'time_ms': search_time * 1000,
                 'top_result': {
-                    'file': results[0]['file_name'] if results else None,
-                    'similarity': results[0]['similarity'] if results else None
+                    'file': results[0].record.file_name if results else None,
+                    'similarity': results[0].similarity if results else None
                 }
             }
         else:

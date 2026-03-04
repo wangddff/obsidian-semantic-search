@@ -15,9 +15,10 @@ from bs4 import BeautifulSoup
 class TextExtractor:
     """文本提取器"""
     
-    def __init__(self, encoding: str = "utf-8"):
+    def __init__(self, encoding: str = "utf-8", **kwargs):
         self.encoding = encoding
         self.markdown_parser = markdown.Markdown()
+        # 接受但不使用额外的关键字参数以保持向后兼容性
         
     def extract_from_file(self, file_path: str) -> Dict:
         """

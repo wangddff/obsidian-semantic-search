@@ -1,0 +1,68 @@
+# Obsidian文件监控配置
+
+# Obsidian笔记库路径
+obsidian_vault: "/Users/wangdf/workshop/obsidian-vault"
+
+# 监控配置
+monitoring:
+  enabled: true
+  mode: "realtime"  # realtime: 实时监控, polling: 轮询监控
+  
+  # 实时监控配置
+  realtime:
+    recursive: true  # 是否递归监控子目录
+    events: ["created", "modified", "deleted", "moved"]  # 监控的事件类型
+    
+  # 轮询监控配置（mode=polling时使用）
+  polling:
+    interval: 60  # 轮询间隔（秒）
+    
+  # 性能配置
+  performance:
+    hash_cache: true  # 是否使用哈希缓存避免重复处理
+    batch_size: 10    # 批量处理大小
+    max_workers: 4    # 最大工作线程数
+
+# 重建配置
+rebuild:
+  enabled: true
+  schedule: "0 3 * * 0"  # 每周日凌晨3点（cron格式）
+  
+  # 重建选项
+  options:
+    full_rebuild: true    # 是否完全重建（删除旧表）
+    cleanup_old: true     # 是否清理旧数据
+    verify_data: true     # 是否验证数据一致性
+    
+  # 通知配置
+  notification:
+    enabled: false        # 是否发送通知
+    # channel: "telegram"  # 通知渠道
+
+# 日志配置
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  file: "logs/monitor.log"  # 日志文件路径
+  max_size: "10MB"  # 最大日志文件大小
+  backup_count: 5   # 备份文件数量
+
+# 高级配置
+advanced:
+  # 文件过滤
+  file_patterns:
+    include: ["*.md"]      # 包含的文件模式
+    exclude: [".*", "*.tmp", "*.bak"]  # 排除的文件模式
+    
+  # 事件处理
+  event_handling:
+    debounce_ms: 500       # 防抖延迟（毫秒）
+    retry_attempts: 3      # 重试次数
+    retry_delay: 1000      # 重试延迟（毫秒）
+    
+  # 资源限制
+  resource_limits:
+    max_memory_mb: 512     # 最大内存使用（MB）
+    max_cpu_percent: 50    # 最大CPU使用率（%）
+    
+# 监控状态文件
+status_file: ".monitor_status.json"

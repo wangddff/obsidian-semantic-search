@@ -1,0 +1,39 @@
+# 用户路径配置
+# 记录用户的重要目录路径，便于系统自动识别和使用
+
+# Obsidian笔记库路径
+obsidian_vault:
+  # 主路径（已确认）
+  primary: "/Users/wangdf/workshop/obsidian-vault"
+  
+  # 别名（用户常用称呼）
+  aliases:
+    - "我的Obsidian库"
+    - "我的Obsidian笔记库"
+    - "obsidian库"
+    - "笔记库"
+  
+  # 子目录结构
+  subdirectories:
+    - "2026"           # 2026年笔记
+    - "Evernote"       # Evernote迁移笔记
+    - "Evernote-Global" # Evernote全局笔记
+    - "OpenClaw"       # OpenClaw相关笔记
+  
+  # 语义搜索状态
+  semantic_search:
+    configured: true
+    indexed_subdirectories:
+      - "OpenClaw"     # 已索引
+    total_files: 1394
+    total_chunks: 1616
+    indexed_chunks: 9   # 当前已索引数量
+
+# 其他可能的重要路径
+other_paths:
+  workspace: "/Users/wangdf/.openclaw/workspace"
+  home: "/Users/wangdf"
+
+# 配置说明
+# 当用户提到路径别名时，系统应自动映射到对应的实际路径
+# 例如："我的Obsidian库" → "/Users/wangdf/workshop/obsidian-vault"

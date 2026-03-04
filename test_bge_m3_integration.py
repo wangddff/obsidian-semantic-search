@@ -10,6 +10,7 @@ import time
 import logging
 import tempfile
 import shutil
+import numpy as np
 
 # 添加项目根目录到路径
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))

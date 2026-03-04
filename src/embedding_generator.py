@@ -206,23 +206,36 @@ class EmbeddingGenerator:
         metadata_list = []
         
         for chunk in chunks:
-            texts.append(chunk['text'])
-            
-            # 构建元数据，处理可能缺失的字段
-            metadata = {
-                'chunk_id': chunk.get('chunk_id', 'unknown'),
-                'file_path': chunk.get('file_path', ''),
-                'file_name': chunk.get('file_name', ''),
-                'original_metadata': chunk.get('metadata', {})
-            }
-            
-            # 可选字段
-            if 'start_pos' in chunk:
-                metadata['start_pos'] = chunk['start_pos']
-            if 'end_pos' in chunk:
-                metadata['end_pos'] = chunk['end_pos']
-            if 'heading_context' in chunk:
-                metadata['heading_context'] = chunk['heading_context']
+            # 处理TextChunk对象或字典
+            if hasattr(chunk, 'text'):
+                # TextChunk对象
+                texts.append(chunk.text)
+                metadata = {
+                    'chunk_id': getattr(chunk, 'chunk_id', 'unknown'),
+                    'file_path': getattr(chunk, 'file_path', ''),
+                    'file_name': getattr(chunk, 'file_name', ''),
+                    'start_pos': getattr(chunk, 'start_pos', 0),
+                    'end_pos': getattr(chunk, 'end_pos', 0),
+                    'heading_context': getattr(chunk, 'heading_context', []),
+                    'original_metadata': getattr(chunk, 'metadata', {})
+                }
+            else:
+                # 字典
+                texts.append(chunk['text'])
+                metadata = {
+                    'chunk_id': chunk.get('chunk_id', 'unknown'),
+                    'file_path': chunk.get('file_path', ''),
+                    'file_name': chunk.get('file_name', ''),
+                    'original_metadata': chunk.get('metadata', {})
+                }
+                
+                # 可选字段
+                if 'start_pos' in chunk:
+                    metadata['start_pos'] = chunk['start_pos']
+                if 'end_pos' in chunk:
+                    metadata['end_pos'] = chunk['end_pos']
+                if 'heading_context' in chunk:
+                    metadata['heading_context'] = chunk['heading_context']
             
             metadata_list.append(metadata)
         

@@ -1,0 +1,1 @@
+0 3 * * 0 cd /Users/wangdf/.openclaw/workspace/obsidian_semantic_search && /Users/wangdf/.openclaw/workspace/obsidian_semantic_search/automation_manager.sh rebuild >> /Users/wangdf/.openclaw/workspace/obsidian_semantic_search/logs/cron.log 2>&1

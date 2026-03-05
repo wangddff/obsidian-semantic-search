@@ -13,10 +13,10 @@ model:
 
 # 文本处理配置
 text_processing:
-  chunk_size: 3000  # 每个分块大约3000字符（基于8192 tokens上下文）
-  chunk_overlap: 300  # 分块重叠字符数
-  min_chunk_size: 2000  # 最小分块大小
-  max_chunk_size: 4000  # 最大分块大小
+  chunk_size: 3800  # 每个分块大约3800字符（基于BGE-M3的8192 tokens上下文，安全范围）
+  chunk_overlap: 380  # 分块重叠字符数（10%的chunk_size）
+  min_chunk_size: 10  # 最小分块大小，确保所有小文件都能被处理
+  max_chunk_size: 4200  # 最大分块大小，确保在模型安全限制内（4336字符 - 余量）
   adaptive_chunking: true  # 自适应分块
 
 # 文件处理配置

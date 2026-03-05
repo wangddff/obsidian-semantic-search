@@ -69,8 +69,14 @@ class ChunkProcessor:
         Returns:
             文本分块列表
         """
-        # 如果文本太短，直接作为一个分块
+        # 清理文本
+        text = text.strip()
+        if not text:
+            return []
+        
+        # 如果文本非常短，直接作为一个分块（即使小于min_chunk_size）
         if len(text) <= self.max_chunk_size:
+            # 对于小文件，我们仍然要处理它，即使小于min_chunk_size
             return [self._create_chunk(text, 0, metadata, file_info)]
         
         # 按段落分割
@@ -89,13 +95,13 @@ class ChunkProcessor:
                 # 先把当前块保存
                 if current_chunk:
                     chunk_text = ' '.join(current_chunk)
-                    if len(chunk_text) >= self.min_chunk_size:
-                        chunks.append(self._create_chunk(
-                            chunk_text, 
-                            len(chunks),
-                            metadata,
-                            file_info
-                        ))
+                    # 即使小于min_chunk_size也保存（避免丢失内容）
+                    chunks.append(self._create_chunk(
+                        chunk_text, 
+                        len(chunks),
+                        metadata,
+                        file_info
+                    ))
                 
                 # 分割长段落
                 sub_chunks = self._split_long_paragraph(para, metadata, file_info)
@@ -110,13 +116,13 @@ class ChunkProcessor:
             if current_length + para_length > self.chunk_size:
                 if current_chunk:
                     chunk_text = ' '.join(current_chunk)
-                    if len(chunk_text) >= self.min_chunk_size:
-                        chunks.append(self._create_chunk(
-                            chunk_text, 
-                            len(chunks),
-                            metadata,
-                            file_info
-                        ))
+                    # 即使小于min_chunk_size也保存
+                    chunks.append(self._create_chunk(
+                        chunk_text, 
+                        len(chunks),
+                        metadata,
+                        file_info
+                    ))
                 
                 # 开始新块，包含重叠
                 if chunks and self.chunk_overlap > 0:
@@ -136,13 +142,13 @@ class ChunkProcessor:
         # 处理最后一个块
         if current_chunk:
             chunk_text = ' '.join(current_chunk)
-            if len(chunk_text) >= self.min_chunk_size:
-                chunks.append(self._create_chunk(
-                    chunk_text, 
-                    len(chunks),
-                    metadata,
-                    file_info
-                ))
+            # 即使小于min_chunk_size也保存
+            chunks.append(self._create_chunk(
+                chunk_text, 
+                len(chunks),
+                metadata,
+                file_info
+            ))
         
         return chunks
     
@@ -193,8 +199,27 @@ class ChunkProcessor:
         for sentence in sentences:
             sent_length = len(sentence)
             
+            # 如果单个句子就超过max_chunk_size，需要进一步分割
+            if sent_length > self.max_chunk_size:
+                # 先把当前块保存
+                if current_chunk:
+                    chunk_text = ' '.join(current_chunk)
+                    chunks.append(self._create_chunk(
+                        chunk_text, 
+                        len(chunks),
+                        metadata,
+                        file_info
+                    ))
+                    current_chunk = []
+                    current_length = 0
+                
+                # 分割超长句子
+                sub_chunks = self._split_very_long_sentence(sentence, metadata, file_info)
+                chunks.extend(sub_chunks)
+                continue
+            
+            # 正常处理：如果添加当前句子会超过max_chunk_size，保存当前块
             if current_length + sent_length > self.max_chunk_size:
-                # 保存当前块
                 if current_chunk:
                     chunk_text = ' '.join(current_chunk)
                     chunks.append(self._create_chunk(
@@ -210,6 +235,87 @@ class ChunkProcessor:
             else:
                 current_chunk.append(sentence)
                 current_length += sent_length
+        
+        # 处理最后一个块
+        if current_chunk:
+            chunk_text = ' '.join(current_chunk)
+            chunks.append(self._create_chunk(
+                chunk_text, 
+                len(chunks),
+                metadata,
+                file_info
+            ))
+        
+        return chunks
+    
+    def _split_very_long_sentence(self, sentence: str, metadata: Dict, file_info: Dict) -> List[TextChunk]:
+        """
+        分割超长句子
+        
+        Args:
+            sentence: 超长句子文本
+            metadata: 元数据
+            file_info: 文件信息
+            
+        Returns:
+            分块列表
+        """
+        chunks = []
+        
+        # 按逗号、分号等标点进一步分割
+        parts = re.split(r'(?<=[，,；;])\s*', sentence)
+        
+        current_chunk = []
+        current_length = 0
+        
+        for part in parts:
+            part = part.strip()
+            if not part:
+                continue
+                
+            part_length = len(part)
+            
+            # 如果部分仍然太长，按固定大小分割
+            if part_length > self.max_chunk_size:
+                # 先把当前块保存
+                if current_chunk:
+                    chunk_text = ' '.join(current_chunk)
+                    chunks.append(self._create_chunk(
+                        chunk_text, 
+                        len(chunks),
+                        metadata,
+                        file_info
+                    ))
+                    current_chunk = []
+                    current_length = 0
+                
+                # 按固定大小分割
+                for i in range(0, part_length, self.max_chunk_size):
+                    sub_text = part[i:i + self.max_chunk_size]
+                    chunks.append(self._create_chunk(
+                        sub_text, 
+                        len(chunks),
+                        metadata,
+                        file_info
+                    ))
+                continue
+            
+            # 正常处理
+            if current_length + part_length > self.max_chunk_size:
+                if current_chunk:
+                    chunk_text = ' '.join(current_chunk)
+                    chunks.append(self._create_chunk(
+                        chunk_text, 
+                        len(chunks),
+                        metadata,
+                        file_info
+                    ))
+                
+                current_chunk = [part]
+                current_length = part_length
+            else:
+                current_chunk.append(part)
+                current_length += part_length
         
         # 处理最后一个块
         if current_chunk:
